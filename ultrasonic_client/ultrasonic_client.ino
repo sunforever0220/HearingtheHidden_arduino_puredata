@@ -8,8 +8,8 @@ String Wifi_SSID="Ambientwalk";//replace with your Wifi SSID name
 String Wifi_PWD="ambientwalkosc";       //replace with your Wifi password
 
 //String apikey="0P31Q41VMNV3KVJO";  // YOUR THINGSPEAK.COM ACCOUNT API KEY
-NewPing sonar1(3, 2, MAX_DISTANCE);//left
-NewPing sonar2(9, 8, MAX_DISTANCE);//right
+NewPing sonar1(4, 2, MAX_DISTANCE);//left
+NewPing sonar2(9, 7, MAX_DISTANCE);//right
 
 
 void setup()
@@ -50,9 +50,9 @@ void loop()
   connectServer += "\",80";
 */
 //UDP connection to OSC receiver
-  String connectServer = "AT+CIPSTART=4,\"TCP\",\"";
-  connectServer += "172.20.10.2"; // api.thingspeak.com
-  connectServer += "\",12000";
+  String connectServer = "AT+CIPSTART=4,\"UDP\",\"";
+  connectServer += "172.20.10.2"; // server on processing, will change ip to phone's ip
+  connectServer += "\",12000,1112,0";
 
     
   //Serial.print("TCP Connection = ");
@@ -78,8 +78,7 @@ void loop()
   dataToPush += "\r\n\r\n";
 */
 //sample osc
-String dataToPush = "L120R220\r\n";
-
+String dataToPush = "L"+ultrasonic1+"R"+ultrasonic2+"\r\n";
 
   Serial.print("Data updated = ");
   Serial.print(dataToPush);
@@ -92,8 +91,8 @@ String dataToPush = "L120R220\r\n";
   Serial.println(sendData);
   Serial1.println(sendData);
   delay(500);  // wait 2 second to establish connection between thingSpeak and ESP8266
-
-  if(Serial1.find(">"))
+//Serial.println(Serial1.readString());
+  if(Serial1.find("OK"))
   {
     Serial1.print(dataToPush);
     Serial.println("Data sent");
@@ -104,7 +103,7 @@ String dataToPush = "L120R220\r\n";
     Serial.println("AT+CIPCLOSE");  // alerting closing connection
   }
    
-  delay(15000);  // thingSpeak needs minimum 15 sec delay between updates
+ // delay(1000);  // 1 sec delay between updates
 }
 
 String sendData(String command, const int timeout, boolean debug)

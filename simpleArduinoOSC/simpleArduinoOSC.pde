@@ -40,7 +40,10 @@ stroke(255);
 }
 
 //process events
-void draw() {text(res_message,20,50);}
+void draw() {
+  background(0);
+text(res_message,20,50);
+}
 
 /**
  * To perform any action on datagram reception, you need to implement this 
@@ -51,7 +54,8 @@ void draw() {text(res_message,20,50);}
  * sender IP address and his port) can be set like below.
  */
 // void receive( byte[] data ) {       // <-- default handler
-void receive( byte[] data ) {  // <-- extended handler
+void receive( byte[] data ) { 
+  res_message="";// <-- extended handler
  for(int i=0; i < data.length; i++){
 res_message+=i+":"+data[i]+",";
  }
